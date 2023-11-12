@@ -4,7 +4,13 @@
 1. よく見られているエピソードを知りたいです。エピソード視聴数トップ3のエピソードタイトルと視聴数を取得してください  
 
     ```bash
-    SELECT title,viewership FROM episodes ORDER BY viewership DESC LIMIT 3;
+    SELECT 
+        title,viewership 
+    FROM 
+        episodes 
+    ORDER BY 
+        viewership DESC 
+    LIMIT 3;  
     ```
 
     ```bash
