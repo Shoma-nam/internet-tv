@@ -40,9 +40,65 @@
 | genre_name | VARCHAR(255) |      |          |       |                |
 
 2. チャンネルテーブル (channels)  
+
+| カラム名       | データ型        | NULL | キー     | 初期値 | AUTO INCREMENT |
+|----------------|----------------|------|----------|-------|----------------|
+| channel_id     | INT            |      | PRIMARY  |       | YES            |
+| channel_name   | VARCHAR(255)   |      |          |       |                |
+| genre_id       | INT            |      | FOREIGN  |       |                |
+
 3. シリーズテーブル (series)  
+
+| カラム名       | データ型      | NULL | キー     | 初期値 | AUTO INCREMENT |
+|----------------|--------------|------|----------|-------|----------------|
+| series_id      | INT          |      | PRIMARY  |       | YES            |
+| season_number  | INT          |      |          |       |                |
+| series_name    | VARCHAR(255) |      |          |       |                |
+
 4. 番組テーブル (programs)  
+
+| カラム名       | データ型        | NULL | キー     | 初期値 | AUTO INCREMENT |
+|----------------|----------------|------|----------|-------|----------------|
+| program_id     | INT            |      | PRIMARY  |       | YES            |
+| title          | VARCHAR(255)   |      |          |       |                |
+| description    | TEXT           | YES  |          |       |                |
+| series_id      | INT            | YES  | FOREIGN  |       |                |
+| genre_id       | INT            |      | FOREIGN  |       |                |
+
 5. エピソードテーブル (episodes)  
+
+| カラム名      | データ型        | NULL | キー     | 初期値 | AUTO INCREMENT |
+|---------------|----------------|------|----------|-------|----------------|
+| program_id    | INT            |      | PRIMARY  |       | YES            |
+| title         | VARCHAR(255)   |      |          |       |                |
+| description   | TEXT           |      |          |       |                |
+| series_id     | INT            | YES  | FOREIGN  |       |                |
+| genre_id      | INT            |      | FOREIGN  |       |                |
+
 6. ユーザーテーブル (users)  
+
+| カラム名       | データ型      | NULL | キー     | 初期値 | AUTO INCREMENT |
+|----------------|--------------|------|----------|-------|----------------|
+| user_id        | INT          |      | PRIMARY  |       | YES            |
+| username       | VARCHAR(255) |      |          |       |                |
+| email          | VARCHAR(255) |      | UNIQUE   |       |                |
+| password_hash  | VARCHAR(255) |      |          |       |                |
+
 7. 視聴履歴テーブル (viewing_history)  
+
+| カラム名          | データ型      | NULL | キー     | 初期値 | AUTO INCREMENT |
+|-------------------|--------------|------|----------|-------|----------------|
+| history_id        | INT          |      | PRIMARY  |       | YES            |
+| user_id           | INT          |      | FOREIGN  |       |                |
+| episode_id        | INT          |      | FOREIGN  |       |                |
+| viewing_datetime  | DATETIME     |      |          |       |                |
+
 8. 放送スケジュールテーブル(broadcast_schedule)  
+
+| カラム名     | データ型    | NULL | キー     | 初期値 | AUTO INCREMENT |
+|--------------|------------|------|----------|-------|----------------|
+| schedule_id  | INT        |      | PRIMARY  |       | YES            |
+| channel_id   | INT        |      | FOREIGN  |       |                |
+| episode_id   | INT        |      | FOREIGN  |       |                |
+| start_time   | DATETIME   |      |          |       |                |
+| end_time     | DATETIME   |      |          |       |                |
