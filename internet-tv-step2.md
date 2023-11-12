@@ -23,25 +23,26 @@
 # ドキュメント
 このドキュメントでは、インターネットTVサービスのテーブルを構築する手順を説明します。  
 
-# 1.データベースの構築
-
 以下のステップでデータベースを構築していきます。
 
-1-1.データベース管理システム(DBMS)の選定: 
+1. データベースの構築
 
-1-2.データベースの作成: 
+1-1.データベース管理システム(DBMS)の選定 ← 本ドキュメントで解説します。
 
-1-3.テーブルの設計と作成: データベース内に必要なテーブルを設計し、それを実際に作成します。
-    テーブルの設計には、テーブルの名前、カラム（列）の名前、データ型、制約（PRIMARY KEY、FOREIGN KEY、UNIQUE KEYなど）などが含まれます。
+1-2.データベースの作成 ← 本ドキュメントで解説します。
 
-1-4.インデックスの作成: データベースのパフォーマンスを向上させるために、クエリの高速化に役立つインデックスを必要な場所に作成します。
-    インデックスは検索処理を高速化します。
+2. ステップ1で設計したテーブルの構築。
+2-1.テーブルの設計と作成: テーブル設計はstep1で作成済み。テーブル作成を本ドキュメントで解説します。
 
-1-5.関連付けと外部キー制約: テーブル間の関連を設定し、外部キー制約を定義します。これにより、異なるテーブル間でデータの整合性を保ちます。
+2-2.インデックスの作成 ← step1で作成済み。
 
-1-6.データの初期化: テーブルに初期データを挿入します。これには、手動でデータを挿入する作業や、サンプルデータを使用することが含まれます。
+2-3.関連付けと外部キー制約 ← step1で作成済み。
 
-1-7.セキュリティ設定: データベースへのアクセス権やセキュリティ設定を適切に設定し、不正アクセスからデータを保護します。
+3. サンプルデータの挿入
+3-1.データの初期化 ← 本ドキュメントで解説します。
+
+
+# 1.データベースの構築
 
 ## 1-1.データベース管理システム(DBMS)の選定
  - データベースを構築するために、どのデータベース管理システム（例：MySQL、PostgreSQL、SQLite、Microsoft SQL Serverなど）を使用するか選定します。
@@ -61,7 +62,6 @@
 1. MySQLにログインします。コマンドラインで以下のコマンドを実行します。
     ユーザー名には、MySQLにアクセスできるユーザー名を指定します。
     パスワードが必要な場合は、プロンプトが表示されるので、パスワードを入力します。
-
     ```bash
     mysql -u ユーザー名 -p
 
@@ -77,37 +77,31 @@
 
 # 2.ステップ1で設計したテーブルの構築
 
-## テーブルの作成手順
+## 2-1.テーブルの作成手順
 
 MySQLデータベースにstep1のテーブルを作成する手順を説明します。以下の7つのテーブルを作成します。
 
-1. チャンネルテーブル (channels)
-2. 番組テーブル (programs)
+1. ジャンルテーブル (genres)
+2. チャンネルテーブル (channels)
 3. シリーズテーブル (series)
-4. エピソードテーブル (episodes)
-5. ジャンルテーブル (genres)
-6. 視聴履歴テーブル (viewing_history)
-7. ユーザーテーブル (users)  
+4. 番組テーブル (programs)
+5. エピソードテーブル (episodes)
+6. ユーザーテーブル (users)
+7. 視聴履歴テーブル (viewing_history)
 
+1. ジャンルテーブル (genres)
+    ```bash
+    CREATE TABLE genres (
+    genre_id INT PRIMARY KEY AUTO_INCREMENT,
+    genre_name VARCHAR(255)
+    );
 
-1. チャンネルテーブル (channels)
+2. チャンネルテーブル (channels)
     ```bash
     CREATE TABLE channels (
     channel_id INT PRIMARY KEY AUTO_INCREMENT,
     channel_name VARCHAR(255),
     genre_id INT,
-    FOREIGN KEY (genre_id) REFERENCES genres(genre_id)
-    );
-
-2. 番組テーブル (programs)
-    ```bash
-    CREATE TABLE programs (
-    program_id INT PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255),
-    description TEXT,
-    series_id INT,
-    genre_id INT,
-    FOREIGN KEY (series_id) REFERENCES series(series_id),
     FOREIGN KEY (genre_id) REFERENCES genres(genre_id)
     );
 
@@ -119,7 +113,19 @@ MySQLデータベースにstep1のテーブルを作成する手順を説明し�
     series_name VARCHAR(255)
     );
 
-4. エピソードテーブル (episodes)
+4. 番組テーブル (programs)
+    ```bash
+    CREATE TABLE programs (
+    program_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255),
+    description TEXT,
+    series_id INT,
+    genre_id INT,
+    FOREIGN KEY (series_id) REFERENCES series(series_id),
+    FOREIGN KEY (genre_id) REFERENCES genres(genre_id)
+    );
+
+5. エピソードテーブル (episodes)
     ```bash
     CREATE TABLE episodes (
     episode_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -134,14 +140,16 @@ MySQLデータベースにstep1のテーブルを作成する手順を説明し�
     FOREIGN KEY (series_id) REFERENCES series(series_id)
     );
 
-5. ジャンルテーブル (genres)
+6. ユーザーテーブル (users)
     ```bash
-    CREATE TABLE genres (
-    genre_id INT PRIMARY KEY AUTO_INCREMENT,
-    genre_name VARCHAR(255)
+    CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
+    password_hash VARCHAR(255)
     );
 
-6. 視聴履歴テーブル (viewing_history)
+7. 視聴履歴テーブル (viewing_history)
     ```bash
     CREATE TABLE viewing_history (
     history_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -151,18 +159,49 @@ MySQLデータベースにstep1のテーブルを作成する手順を説明し�
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (episode_id) REFERENCES episodes(episode_id)
     );
-7. ユーザーテーブル (users)
-    ```bash
-    CREATE TABLE users (
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(255),
-    email VARCHAR(255) UNIQUE,
-    password_hash VARCHAR(255),
-    -- その他のテーブルにリンクするカラムを追加
-    );
 
-# サンプルデータの挿入手順
-1. チャンネルテーブル (channels)
+下記コマンドを打つと、internet_tvのテーブルが表示されます。
+テーブルが正しく作成されているか確認してください。
+    ```bash
+    SHOW TABLES;
+
+```
++-----------------------+
+| Tables_in_internet_tv |
++-----------------------+
+| channels              |
+| episodes              |
+| genres                |
+| programs              |
+| series                |
+| users                 |
+| viewing_history       |
++-----------------------+
+7 rows in set (0.02 sec)
+```
+
+# 3.サンプルデータの挿入
+
+## 3-1.データの初期化
+テーブルに初期データを挿入します。これには、手動でデータを挿入する作業や、サンプルデータを使用することが含まれます。
+
+1. ジャンルテーブル (genres)
+    ```bash
+    INSERT INTO genres (genre_name) VALUES
+    ('ドラマ'),
+    ('アニメ'),
+    ('スポーツ'),
+    ('映画'),
+    ('コメディ'),
+    ('ミステリー'),
+    ('ホラー'),
+    ('SF'),
+    ('ドキュメンタリー'),
+    ('ファンタジー'),
+    ('アクション'),
+    ('ロマンス');
+
+2. チャンネルテーブル (channels)
     ```bash
     INSERT INTO channels (channel_name, genre_id) VALUES
     ('ドラマチャンネル', 1),
@@ -172,7 +211,21 @@ MySQLデータベースにstep1のテーブルを作成する手順を説明し�
     ('ミュージカルチャンネル', 5),
     ('コメディチャンネル', 6);
 
-2. 番組テーブル (programs)
+3. シリーズテーブル (series)
+    ```bash
+    INSERT INTO series (season_number, series_name) VALUES
+    (3, '夜明けの街の物語'),
+    (2, '宇宙の戦士伝説'),
+    (1, '秘密の花園'),
+    (4, 'サイバー探偵アドベンチャー'),
+    (5, '海を越えて'),
+    (2, '宇宙ステーションX'),
+    (3, '怪盗の謎'),
+    (1, '未来への旅'),
+    (6, '歴史の中の影'),
+    (4, '幽霊屋敷の秘密');
+
+4. 番組テーブル (programs)
     ```bash
     INSERT INTO programs (title, description, series_id, genre_id) VALUES
     ('夜明けの街', '大都会を背景にした愛と葛藤の物語。...', 1, 1),
@@ -191,21 +244,7 @@ MySQLデータベースにstep1のテーブルを作成する手順を説明し�
     ('深海の秘密', '深海を探検する海洋学者の冒険と発見を描いたドキュメンタリーシリーズ。', NULL, 3),
     ('幽霊屋敷の謎', '幽霊屋敷の秘密を探る若者たちのスリリングな物語。', NULL, 9);
 
-3. シリーズテーブル (series)
-    ```bash
-    INSERT INTO series (season_number, series_name) VALUES
-    (3, '夜明けの街の物語'),
-    (2, '宇宙の戦士伝説'),
-    (1, '秘密の花園'),
-    (4, 'サイバー探偵アドベンチャー'),
-    (5, '海を越えて'),
-    (2, '宇宙ステーションX'),
-    (3, '怪盗の謎'),
-    (1, '未来への旅'),
-    (6, '歴史の中の影'),
-    (4, '幽霊屋敷の秘密');
-
-4. エピソードテーブル (episodes)
+5. エピソードテーブル (episodes)
     ```bash
     INSERT INTO episodes (series_id, season_number, episode_number, title, description, duration, release_date, viewership) VALUES
     (1, 1, 1, '夜明けの出会い', '新しい都市での生活が始まる主人公の物語。', '00:45:00', '2023-01-01', 500000),
@@ -216,42 +255,10 @@ MySQLデータベースにstep1のテーブルを作成する手順を説明し�
     (5, 1, 1, '新しい地平へ', '海を越えた冒険の始まり。', '00:45:00', '2023-05-10', 350000),
     (6, 1, 1, '宇宙ステーションの日常', '宇宙ステーションでの生活を紹介。', '00:40:00', '2023-06-01', 250000),
     (7, 1, 1, '怪盗の挑戦', '巧妙な怪盗による盗みの計画。', '00:50:00', '2023-07-20', 550000),
-    (8, 1, 1, '時間を超えて', '時間旅行の不思議と冒険。', '00:60:00', '2023-08-15', 500000),
+    (8, 1, 1, '時間を超えて', '時間旅行の不思議と冒険。', '00:55:00', '2023-08-15', 500000),
     (9, 1, 1, '幽霊屋敷の真実', '幽霊屋敷の秘密に迫る。', '01:00:00', '2023-09-10', 600000);
 
-5. ジャンルテーブル (genres)
-    ```bash
-    INSERT INTO genres (genre_name) VALUES
-    ('ドラマ'),
-    ('アニメ'),
-    ('スポーツ'),
-    ('映画'),
-    ('コメディ'),
-    ('ミステリー'),
-    ('ホラー'),
-    ('SF'),
-    ('ドキュメンタリー'),
-    ('ファンタジー'),
-    ('アクション'),
-    ('ロマンス');
-
-6. 視聴履歴テーブル (viewing_history)
-    ```bash
-    INSERT INTO viewing_history (user_id, episode_id, viewing_datetime) VALUES
-    (1, 1, '2023-01-01 20:00:00'),
-    (1, 2, '2023-01-08 20:30:00'),
-    (2, 1, '2023-01-02 18:00:00'),
-    (2, 3, '2023-01-09 19:45:00'),
-    (3, 4, '2023-01-05 21:00:00'),
-    (4, 5, '2023-01-10 20:15:00'),
-    (5, 6, '2023-01-12 18:30:00'),
-    (1, 7, '2023-01-15 22:00:00'),
-    (2, 8, '2023-01-18 19:00:00'),
-    (3, 9, '2023-01-20 21:30:00'),
-    (4, 10, '2023-01-22 20:00:00'),
-    (5, 11, '2023-01-25 18:45:00');
-
-7. ユーザーテーブル (users)
+6. ユーザーテーブル (users)
     ```bash
     INSERT INTO users (username, email, password_hash) VALUES
     ('user1', 'user1@example.com', 'hash1'),
@@ -259,6 +266,25 @@ MySQLデータベースにstep1のテーブルを作成する手順を説明し�
     ('user3', 'user3@example.com', 'hash3'),
     ('user4', 'user4@example.com', 'hash4'),
     ('user5', 'user5@example.com', 'hash5');
+
+7. 視聴履歴テーブル (viewing_history)
+    ```bash
+    INSERT INTO viewing_history (user_id, episode_id, viewing_datetime) VALUES
+    (1, 11, '2023-01-01 20:00:00'),
+    (1, 12, '2023-01-08 20:30:00'),
+    (2, 13, '2023-01-02 18:00:00'),
+    (2, 14, '2023-01-09 19:45:00'),
+    (3, 15, '2023-01-05 21:00:00'),
+    (4, 16, '2023-01-10 20:15:00'),
+    (5, 17, '2023-01-12 18:30:00'),
+    (1, 18, '2023-01-15 22:00:00'),
+    (2, 19, '2023-01-18 19:00:00'),
+    (3, 20, '2023-01-20 21:30:00');
+
+
+
+
+
 
 
 
