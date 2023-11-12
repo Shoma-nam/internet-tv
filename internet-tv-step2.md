@@ -88,6 +88,7 @@ MySQLデータベースにstep1のテーブルを作成する手順を説明し�
 ⑤エピソードテーブル (episodes)
 ⑥ユーザーテーブル (users)
 ⑦視聴履歴テーブル (viewing_history)
+⑧放送スケジュールテーブル(broadcast_schedule)
 
 1. ジャンルテーブル (genres)
     ```bash
@@ -160,16 +161,30 @@ MySQLデータベースにstep1のテーブルを作成する手順を説明し�
     FOREIGN KEY (episode_id) REFERENCES episodes(episode_id)
     );
 
+8. 放送スケジュールテーブル(broadcast_schedule)
+    ```bash
+    CREATE TABLE broadcast_schedule (
+    schedule_id INT PRIMARY KEY AUTO_INCREMENT,
+    channel_id INT,
+    episode_id INT,
+    start_time DATETIME,
+    end_time DATETIME,
+    FOREIGN KEY (channel_id) REFERENCES channels(channel_id),
+    FOREIGN KEY (episode_id) REFERENCES episodes(episode_id)
+    );
+
+
 下記コマンドを打つと、internet_tvのテーブルが表示されます。
 テーブルが正しく作成されているか確認してください。
 ```bash
     SHOW TABLES;
-
 ```
+```bash
 mysql> SHOW TABLES;
 +-----------------------+
 | Tables_in_internet_tv |
 +-----------------------+
+| broadcast_schedule    |
 | channels              |
 | episodes              |
 | genres                |
@@ -178,7 +193,7 @@ mysql> SHOW TABLES;
 | users                 |
 | viewing_history       |
 +-----------------------+
-7 rows in set (0.02 sec)
+8 rows in set (0.15 sec)
 ```
 
 # 3.サンプルデータの挿入
@@ -282,7 +297,7 @@ mysql> SHOW TABLES;
     (2, 19, '2023-01-18 19:00:00'),
     (3, 20, '2023-01-20 21:30:00');
 
-8.放送スケジュールテーブル(broadcast_schedule)
+8. 放送スケジュールテーブル(broadcast_schedule)
     ```bash
     INSERT INTO broadcast_schedule (channel_id, episode_id, start_time, end_time) VALUES
     (1, 11, '2023-11-11 19:00:00', '2023-11-11 19:45:00'),
