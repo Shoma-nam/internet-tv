@@ -81,14 +81,14 @@
 
 MySQLデータベースにstep1のテーブルを作成する手順を説明します。以下の7つのテーブルを作成します。
 
-①ジャンルテーブル (genres)
-②チャンネルテーブル (channels)
-③シリーズテーブル (series)
-④番組テーブル (programs)
-⑤エピソードテーブル (episodes)
-⑥ユーザーテーブル (users)
-⑦視聴履歴テーブル (viewing_history)
-⑧放送スケジュールテーブル(broadcast_schedule)
+1.ジャンルテーブル (genres)  
+2.チャンネルテーブル (channels)  
+3.シリーズテーブル (series)  
+4.番組テーブル (programs)  
+5.エピソードテーブル (episodes)  
+6.ユーザーテーブル (users)  
+7.視聴履歴テーブル (viewing_history)  
+8.放送スケジュールテーブル(broadcast_schedule)  
 
 1. ジャンルテーブル (genres)
     ```bash

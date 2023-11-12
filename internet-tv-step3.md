@@ -164,4 +164,21 @@
    番組の視聴数ランキングはエピソードの平均視聴数ランキングとします。  
    ジャンルごとに視聴数トップの番組に対して、ジャンル名、番組タイトル、エピソード平均視聴数を取得してください。  
 
+    上記問題はわからなかったため、現在取り込み中です。
+    ```bash
+    SELECT 
+        genre_name,title,viewership
+    FROM 
+        programs p
+        JOIN genres g ON p.genres_id = g.genres_id
+        JOIN series s ON p.series_id = s.series_id
+        JOIN episodes e ON e.series_id = s.series_id
+    WHERE 
+        
+    GROUP BY 
+        
+    ORDER BY 
+    ```
+ 
+
 
